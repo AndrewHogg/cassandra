@@ -43,6 +43,7 @@ import org.apache.cassandra.service.StorageService;
 
 import static org.apache.cassandra.distributed.action.GossipHelper.withProperty;
 import static org.apache.cassandra.distributed.shared.ClusterUtils.getClusterMetadataVersion;
+import static org.apache.cassandra.distributed.shared.ClusterUtils.getSequenceAfterCommit;
 
 public class ResumableStartupTest extends FuzzTestBase
 {
