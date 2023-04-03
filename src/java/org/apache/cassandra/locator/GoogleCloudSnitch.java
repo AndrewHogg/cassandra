@@ -41,6 +41,8 @@ public class GoogleCloudSnitch extends AbstractNetworkTopologySnitch
 {
     protected static final Logger logger = LoggerFactory.getLogger(GoogleCloudSnitch.class);
     protected static final String ZONE_NAME_QUERY_URL = "http://metadata.google.internal/computeMetadata/v1/instance/zone";
+    private static final String DEFAULT_DC = "UNKNOWN-DC";
+    private static final String DEFAULT_RACK = "UNKNOWN-RACK";
     protected String gceZone;
     protected String gceRegion;
 
@@ -95,6 +97,8 @@ public class GoogleCloudSnitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_RACK;
         return metadata.directory.location(nodeId).rack;
     }
 
@@ -105,6 +109,8 @@ public class GoogleCloudSnitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_DC;
         return metadata.directory.location(nodeId).rack;
     }
 }

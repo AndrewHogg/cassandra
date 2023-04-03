@@ -49,6 +49,8 @@ public class Ec2Snitch extends AbstractNetworkTopologySnitch
     private static final String EC2_NAMING_STANDARD = "standard";
 
     private static final String ZONE_NAME_QUERY_URL = "http://169.254.169.254/latest/meta-data/placement/availability-zone";
+    private static final String DEFAULT_DC = "UNKNOWN-DC";
+    private static final String DEFAULT_RACK = "UNKNOWN-RACK";
 
     final String ec2region;
     private final String ec2zone;
@@ -130,6 +132,8 @@ public class Ec2Snitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_RACK;
         return metadata.directory.location(nodeId).rack;
     }
 
@@ -140,6 +144,8 @@ public class Ec2Snitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_DC;
         return metadata.directory.location(nodeId).datacenter;
     }
 

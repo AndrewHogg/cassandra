@@ -45,6 +45,8 @@ public class AlibabaCloudSnitch extends AbstractNetworkTopologySnitch
 {
     protected static final Logger logger = LoggerFactory.getLogger(AlibabaCloudSnitch.class);
     protected static final String ZONE_NAME_QUERY_URL = "http://100.100.100.200/latest/meta-data/zone-id";
+    private static final String DEFAULT_DC = "UNKNOWN-DC";
+    private static final String DEFAULT_RACK = "UNKNOWN-RACK";
     protected String ecsZone;
     protected String ecsRegion;
     
@@ -110,6 +112,8 @@ public class AlibabaCloudSnitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_RACK;
         return metadata.directory.location(nodeId).rack;
     }
 
@@ -120,6 +124,8 @@ public class AlibabaCloudSnitch extends AbstractNetworkTopologySnitch
             return ecsRegion;
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_DC;
         return metadata.directory.location(nodeId).datacenter;
     }
 

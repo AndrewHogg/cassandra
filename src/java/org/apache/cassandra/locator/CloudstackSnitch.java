@@ -52,7 +52,8 @@ public class CloudstackSnitch extends AbstractNetworkTopologySnitch
 {
     protected static final Logger logger = LoggerFactory.getLogger(CloudstackSnitch.class);
     protected static final String ZONE_NAME_QUERY_URI = "/latest/meta-data/availability-zone";
-
+    private static final String DEFAULT_DC = "UNKNOWN-DC";
+    private static final String DEFAULT_RACK = "UNKNOWN-RACK";
     private static final String[] LEASE_FILES =
     {
         "file:///var/lib/dhcp/dhclient.eth0.leases",
@@ -83,6 +84,8 @@ public class CloudstackSnitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_RACK;
         return metadata.directory.location(nodeId).rack;
     }
 
@@ -93,6 +96,8 @@ public class CloudstackSnitch extends AbstractNetworkTopologySnitch
 
         ClusterMetadata metadata = ClusterMetadata.current();
         NodeId nodeId = metadata.directory.peerId(endpoint);
+        if (nodeId == null)
+            return DEFAULT_DC;
         return metadata.directory.location(nodeId).datacenter;
     }
 
